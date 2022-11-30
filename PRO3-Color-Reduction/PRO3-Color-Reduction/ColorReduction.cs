@@ -13,56 +13,48 @@ namespace PRO3_Color_Reduction
         public const int colorsPerByte = 256;
 
         // Popularity Color Reduction
-        static public Bitmap PopularityQuantization(Bitmap source, int colorCount, ProgressBar progressBar, int newWidth = 0, int newHeight = 0)
+        static public Bitmap PopularityQuantization
+            (Bitmap source, int colorCount, ProgressBar progressBar = null)
         {
-            if(newWidth == 0 || newHeight == 0)
-            {
-                newWidth = source.Width;
-                newHeight = source.Height;
-            }
+            if (colorCount <= 0) throw new Exception("PopularityQuantization - colorCount invalid\n");
 
-            Bitmap sourceCopy = new Bitmap(source);
-            //Bitmap result = new Bitmap(source, newWidth, newHeight);
+            Bitmap result = new Bitmap(source);
 
             Dictionary<Color, long> histogram =
                 HistogramCreator.CreateHistogram(source, colorsPerByte);
 
+            if (histogram.Count <= colorCount) return result;
+
             List<KeyValuePair<Color, long>> histogramList = histogram.ToList();
             histogramList.Sort((a, b) => a.Value.CompareTo(b.Value));
 
-            //List<Color> selectedColors = new List<Color>(histogramList.GetRange(0, colorCount).);
             List<Color> selectedColors = new List<Color>();
 
             for (int i = 0; i < colorCount; i++) selectedColors.Add(histogramList[i].Key);
 
             Color currentColor, approxColor;
-            for(int y = 0; y < sourceCopy.Height; y++)
+            for(int y = 0; y < result.Height; y++)
             {
-                for(int x = 0; x < sourceCopy.Width; x++)
+                for(int x = 0; x < result.Width; x++)
                 {
                     currentColor = source.GetPixel(x, y);
                     approxColor = Utilities.ApproximateColor(currentColor, selectedColors);
-                    sourceCopy.SetPixel(x, y, approxColor);
+                    result.SetPixel(x, y, approxColor);
                 }
 
-                progressBar.Value = (int)(((float)(y + 1) / (float)sourceCopy.Height) * progressBar.Maximum);
+                if(progressBar != null) progressBar.Value = (int)(((float)(y + 1) / (float)result.Height) * progressBar.Maximum);
             }
 
-            return new Bitmap(sourceCopy, newWidth, newHeight);
+            return result;
         }
 
         // K-Means Color Reduction (K-Means Clustering)
-        static public Bitmap KMeansQuantization(Bitmap source, int colorCount, int epsilon, ProgressBar progressBar, int newWidth = 0, int newHeight = 0)
+        static public Bitmap KMeansQuantization
+            (Bitmap source, int colorCount, int epsilon, ProgressBar progressBar = null)
         {
             if (colorCount <= 0) throw new Exception("KMeansQuantization - colorCount invalid\n");
 
-            if (newWidth == 0 || newHeight == 0)
-            {
-                newWidth = source.Width;
-                newHeight = source.Height;
-            }
-
-            Bitmap sourceCopy = new Bitmap(source);
+            Bitmap result = new Bitmap(source);
 
             var random = new Random();
             bool isChange = true;
@@ -73,9 +65,9 @@ namespace PRO3_Color_Reduction
             Vector3[] sums = new Vector3[k];
             int[] counts = new int[k];
 
-            int[,] pixelsCentroidIndex = new int[sourceCopy.Width, sourceCopy.Height];
+            int[,] pixelsCentroidIndex = new int[result.Width, result.Height];
 
-            for (int i = 0; i < k; i++) centroids[i] = sourceCopy.GetPixel(random.Next(k), random.Next(k));
+            for (int i = 0; i < k; i++) centroids[i] = result.GetPixel(random.Next(k), random.Next(k));
 
             int iterationCount = 0;
             const int maxIterationCount = 1000;
@@ -85,6 +77,7 @@ namespace PRO3_Color_Reduction
                 iterationCount++;
 
                 for(int y = 0; y < source.Height; y++)
+                {
                     for(int x = 0; x < source.Width; x++)
                     {
                         Color c = source.GetPixel(x, y);
@@ -94,6 +87,9 @@ namespace PRO3_Color_Reduction
                         sums[pixelsCentroidIndex[x, y]].Z += c.B;
                         counts[pixelsCentroidIndex[x, y]]++;
                     }
+                    if (progressBar != null) progressBar.Value = (int)(((float)(y + 1) / (float)result.Height) * progressBar.Maximum);
+                }
+
 
                 isChange = false;
                 for(int i = 0; i < k; i++)
@@ -117,16 +113,116 @@ namespace PRO3_Color_Reduction
                 {
                     sums[i].X = 0; sums[i].Y = 0; sums[i].Z = 0;
                 }
-                Array.Clear(counts, 0, k);
-
-                progressBar.Value = (int)((float)iterationCount / (float)maxIterationCount * progressBar.Maximum);
+                Array.Clear(counts, 0, k);                
             }
 
             for (int y = 0; y < source.Height; y++)
                 for (int x = 0; x < source.Width; x++)
-                    sourceCopy.SetPixel(x, y, centroids[pixelsCentroidIndex[x, y]]);
+                    result.SetPixel(x, y, centroids[pixelsCentroidIndex[x, y]]);
 
-            return sourceCopy;
+            return result;
+        }
+        
+        // Error Diffustion Color Reduction
+        public enum ErrorDiffusionMatrix
+        {
+            FloydSteinberg,
+            Burkes,
+            Stucky
+        }
+
+        static private float[,] FloydSteinbergFilter =
+        { 
+            { 0, 0, 0 }, 
+            { 0, 0, 7f/16f }, 
+            { 3f/16f, 5f/16f, 1f/16f }
+        };
+        static private float[,] BurkesFilter =
+        { 
+            { 0, 0, 0, 0, 0 }, 
+            { 0, 0, 0, 8f / 32f, 4f / 32f }, 
+            { 2f / 32f, 4f / 32f, 8f / 32f, 4f / 32f, 2f / 32f }
+        };
+        static private float[,] StuckyFilter =
+        {
+            {0, 0, 0, 0, 0 },
+            {0, 0, 0, 0, 0 },
+            {0, 0, 0, 8f/42f, 4f/42f },
+            {2f/42f, 4f/42f, 8f/42f, 4f/42f, 2f/42f },
+            {1f/42f, 2f/42f, 4f/42f, 2f/42f, 1f/42f }
+        };
+
+        static private void PropagateError(Bitmap bitmap, (int x, int y) p, float[,] filter, Vector3 errorValue)
+        {
+            int fy = (filter.GetLength(1) - 1) / 2;
+            int fx = (filter.GetLength(0) - 1) / 2;
+            for (int dy = 0; dy <= fy && p.y + dy < bitmap.Height; dy++)
+                for (int dx = -fx; dx <= fx && p.x + dx < bitmap.Width; dx++)
+                {
+                    if (p.y + dy < 0 || p.x + dx < 0) continue;
+
+                    float coef = filter[fx + dx, fy + dy];
+                    Color currColor = bitmap.GetPixel(p.x + dx, p.y + dy);
+
+                    int newR = (int)((float)currColor.R + errorValue.X * coef);
+                    if (newR > 255) newR = 255;
+                    if (newR < 0) newR = 0;
+                    int newG = (int)((float)currColor.G + errorValue.Y * coef);
+                    if (newG > 255) newG = 255;
+                    if (newG < 0) newG = 0;
+                    int newB = (int)((float)currColor.B + errorValue.Z * coef);
+                    if (newB > 255) newB = 255;
+                    if (newB < 0) newB = 0;
+
+                    bitmap.SetPixel(p.x + dx, p.y + dy,  Color.FromArgb(newR, newG, newB));
+                }
+        }
+
+        static public Bitmap ErrorDiffusionQuantization
+            (Bitmap source, int colorCount, ErrorDiffusionMatrix matrixType, bool useK3Colors, ProgressBar progressBar = null)
+        {
+            if (colorCount <= 0) throw new Exception("PopularityQuantization - colorCount invalid\n");
+
+            float[,] filter = FloydSteinbergFilter;
+            switch (matrixType)
+            {
+                case ErrorDiffusionMatrix.FloydSteinberg:
+                    filter = FloydSteinbergFilter;
+                    break;
+                case ErrorDiffusionMatrix.Burkes:
+                    filter = BurkesFilter;
+                    break;
+                case ErrorDiffusionMatrix.Stucky:
+                    filter = StuckyFilter;
+                    break;
+            }
+
+            //filter = KosnoFilter;
+
+            Bitmap result = new Bitmap(source);
+
+            List<Color> selectedColors = Utilities.EquallySpacedColors(colorCount);
+
+            Color currentColor, approxColor;
+            for (int y = 0; y < result.Height; y++)
+            {
+                for (int x = 0; x < result.Width; x++)
+                {
+                    currentColor = result.GetPixel(x, y);
+                    approxColor =
+                        (useK3Colors == true)
+                        ? Utilities.ApproximateColor_EquallySpaced(currentColor, colorCount)
+                        : Utilities.ApproximateColor(currentColor, selectedColors);
+
+                    result.SetPixel(x, y, approxColor);
+                    Vector3 errorVal = new Vector3(currentColor.R - approxColor.R, currentColor.G - approxColor.G, currentColor.B - approxColor.B);
+                    PropagateError(result, (x, y), filter, errorVal);
+                }
+
+                if (progressBar != null) progressBar.Value = (int)(((float)(y + 1) / (float)result.Height) * progressBar.Maximum);
+            }
+
+            return result;
         }
     }
 }

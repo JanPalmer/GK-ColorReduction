@@ -43,6 +43,7 @@ namespace PRO3_Color_Reduction
             this.pictureBox_Enlarge.Size = new System.Drawing.Size(776, 426);
             this.pictureBox_Enlarge.TabIndex = 0;
             this.pictureBox_Enlarge.TabStop = false;
+            this.pictureBox_Enlarge.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_Enlarge_MouseDown);
             // 
             // EnlargedPicture
             // 

@@ -13,7 +13,7 @@ namespace PRO3_Color_Reduction
             Color currColor;
 
             for (int y = 0; y < bitmap.Height; y++)
-                for(int x = 0; x < bitmap.Width; x++)
+                for (int x = 0; x < bitmap.Width; x++)
                 {
                     currColor = bitmap.GetPixel(x, y);
                     if (histogram.ContainsKey(currColor) == false)
@@ -24,6 +24,5 @@ namespace PRO3_Color_Reduction
 
             return histogram;
         }
-
     }
 }

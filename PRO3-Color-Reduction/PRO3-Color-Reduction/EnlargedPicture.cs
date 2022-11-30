@@ -11,13 +11,15 @@ namespace PRO3_Color_Reduction
     public partial class EnlargedPicture : Form
     {
         private Bitmap approximateImage;
+        private SaveContextMenu saveContextMenu;
 
         public EnlargedPicture()
         {
             InitializeComponent();
+            InitializeContextMenu();
         }
 
-        private void SetPictureBox()
+        private void FitImageInPictureBox()
         {
             var pcbxSize = pictureBox_Enlarge.Size;
             pictureBox_Enlarge.SizeMode = approximateImage.Width > pcbxSize.Width || approximateImage.Height > pcbxSize.Height ?
@@ -28,12 +30,30 @@ namespace PRO3_Color_Reduction
         {
             approximateImage = bitmap;
             pictureBox_Enlarge.Image = approximateImage;
-            SetPictureBox();
+            FitImageInPictureBox();
+            saveContextMenu.image = approximateImage;
         }
 
         private void EnlargedPicture_Resize(object sender, EventArgs e)
         {
-            SetPictureBox();
+            FitImageInPictureBox();
+        }
+
+        private void InitializeContextMenu()
+        {
+            saveContextMenu = new SaveContextMenu(approximateImage);
+        }
+
+        private void pictureBox_Enlarge_MouseDown(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Right:
+                    {
+                        saveContextMenu.Show(this, new Point(e.X, e.Y));//places the menu at the pointer position
+                    }
+                    break;
+            }
         }
     }
 }
