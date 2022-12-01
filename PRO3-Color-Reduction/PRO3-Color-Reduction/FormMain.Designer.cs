@@ -134,8 +134,8 @@ namespace PRO3_Color_Reduction
             // 
             // checkBoxErrorDiffusionK3Colors
             // 
-            this.checkBoxErrorDiffusionK3Colors.AutoSize = true;
-            this.checkBoxErrorDiffusionK3Colors.Location = new System.Drawing.Point(191, 18);
+            this.checkBoxErrorDiffusionK3Colors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxErrorDiffusionK3Colors.Location = new System.Drawing.Point(191, 19);
             this.checkBoxErrorDiffusionK3Colors.Name = "checkBoxErrorDiffusionK3Colors";
             this.checkBoxErrorDiffusionK3Colors.Size = new System.Drawing.Size(116, 19);
             this.checkBoxErrorDiffusionK3Colors.TabIndex = 7;
@@ -421,7 +421,7 @@ namespace PRO3_Color_Reduction
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(25, 15);
             this.label2.TabIndex = 5;
-            this.label2.Text = "256";
+            this.label2.Text = "128";
             // 
             // label1
             // 
@@ -449,7 +449,7 @@ namespace PRO3_Color_Reduction
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBar_KValue.Location = new System.Drawing.Point(36, 36);
-            this.trackBar_KValue.Maximum = 256;
+            this.trackBar_KValue.Maximum = 128;
             this.trackBar_KValue.Minimum = 1;
             this.trackBar_KValue.Name = "trackBar_KValue";
             this.trackBar_KValue.Orientation = System.Windows.Forms.Orientation.Vertical;

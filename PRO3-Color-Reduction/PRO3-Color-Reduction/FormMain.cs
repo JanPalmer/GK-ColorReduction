@@ -69,6 +69,7 @@ namespace PRO3_Color_Reduction
             string path6 = "..\\..\\..\\Images\\img6.jpg";
             string path7 = "..\\..\\..\\Images\\img7.jpg";
             string path8 = "..\\..\\..\\Images\\img8.jpg";
+            string path9 = "..\\..\\..\\Images\\img9.jpg";
             DisplayImageInGallery(new Bitmap(path1));
             DisplayImageInGallery(new Bitmap(path2));
             DisplayImageInGallery(new Bitmap(path3));
@@ -77,6 +78,7 @@ namespace PRO3_Color_Reduction
             DisplayImageInGallery(new Bitmap(path6));
             DisplayImageInGallery(new Bitmap(path7));
             DisplayImageInGallery(new Bitmap(path8));
+            DisplayImageInGallery(new Bitmap(path9));
         }
 
         private void DisplayImageInGallery(Bitmap bitmap)

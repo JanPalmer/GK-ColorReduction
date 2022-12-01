@@ -26,6 +26,8 @@ namespace PRO3_Color_Reduction
         }
         private void FitImageInPictureBox()
         {
+            if (approximateImage == null) return;
+
             var pcbxSize = pictureBox_Enlarge.Size;
             pictureBox_Enlarge.SizeMode = approximateImage.Width > pcbxSize.Width || approximateImage.Height > pcbxSize.Height ?
                 PictureBoxSizeMode.Zoom : PictureBoxSizeMode.CenterImage;
