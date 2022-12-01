@@ -19,13 +19,17 @@ namespace PRO3_Color_Reduction
             InitializeContextMenu();
         }
 
+        private void InitializeContextMenu()
+        {
+            saveContextMenu = new SaveContextMenu(approximateImage);
+            pictureBox_Enlarge.ContextMenuStrip = saveContextMenu;
+        }
         private void FitImageInPictureBox()
         {
             var pcbxSize = pictureBox_Enlarge.Size;
             pictureBox_Enlarge.SizeMode = approximateImage.Width > pcbxSize.Width || approximateImage.Height > pcbxSize.Height ?
                 PictureBoxSizeMode.Zoom : PictureBoxSizeMode.CenterImage;
         }
-
         public void SetPicture(Bitmap bitmap)
         {
             approximateImage = bitmap;
@@ -33,27 +37,11 @@ namespace PRO3_Color_Reduction
             FitImageInPictureBox();
             saveContextMenu.image = approximateImage;
         }
-
         private void EnlargedPicture_Resize(object sender, EventArgs e)
         {
             FitImageInPictureBox();
         }
 
-        private void InitializeContextMenu()
-        {
-            saveContextMenu = new SaveContextMenu(approximateImage);
-        }
 
-        private void pictureBox_Enlarge_MouseDown(object sender, MouseEventArgs e)
-        {
-            switch (e.Button)
-            {
-                case MouseButtons.Right:
-                    {
-                        saveContextMenu.Show(this, new Point(e.X, e.Y));//places the menu at the pointer position
-                    }
-                    break;
-            }
-        }
     }
 }

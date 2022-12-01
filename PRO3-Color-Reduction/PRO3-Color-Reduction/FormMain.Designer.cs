@@ -55,6 +55,8 @@ namespace PRO3_Color_Reduction
             this.imageGallery = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox_Main = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.buttonLoadImage = new System.Windows.Forms.Button();
             this.trackBar_KValue = new System.Windows.Forms.TrackBar();
             this.buttonSetK = new System.Windows.Forms.Button();
@@ -238,6 +240,7 @@ namespace PRO3_Color_Reduction
             // 
             // checkBoxPopularityAlgorithm
             // 
+            this.checkBoxPopularityAlgorithm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxPopularityAlgorithm.AutoSize = true;
             this.checkBoxPopularityAlgorithm.Checked = true;
             this.checkBoxPopularityAlgorithm.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -291,6 +294,7 @@ namespace PRO3_Color_Reduction
             // 
             // checkBoxKMeansReduction
             // 
+            this.checkBoxKMeansReduction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxKMeansReduction.AutoSize = true;
             this.checkBoxKMeansReduction.Checked = true;
             this.checkBoxKMeansReduction.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -395,6 +399,8 @@ namespace PRO3_Color_Reduction
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.label2);
+            this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.buttonLoadImage);
             this.groupBox4.Controls.Add(this.trackBar_KValue);
             this.groupBox4.Controls.Add(this.buttonSetK);
@@ -404,6 +410,27 @@ namespace PRO3_Color_Reduction
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Main Window Controls";
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(68, 36);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(25, 15);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "256";
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Location = new System.Drawing.Point(68, 290);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(13, 15);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "1";
             // 
             // buttonLoadImage
             // 
@@ -448,7 +475,7 @@ namespace PRO3_Color_Reduction
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 711);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(200, 200);
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "MainForm";
             this.Text = "Color Reduction";
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -503,6 +530,8 @@ namespace PRO3_Color_Reduction
         private System.Windows.Forms.CheckBox checkBoxKMeansReduction;
         private System.Windows.Forms.CheckBox checkBoxErrorDiffusionK3Colors;
         private System.Windows.Forms.ToolTip toolTipK3Colors;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }
 
